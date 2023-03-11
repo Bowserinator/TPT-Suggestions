@@ -1,11 +1,7 @@
 # Misc extensions, system files
 *.zip
-*.txt
 *.gz
 *.out
-*.sh
-*.py
-*.png
 *.ppm
 *.swp
 *~
@@ -34,7 +30,6 @@ config.log
 /recordings/
 *.def
 *.pref
-*.lua
 screenshot_*
 
 # Visual studio
@@ -85,7 +80,6 @@ screenshot_*
 *.gch
 *.pyc
 *.xcodeproj
-*.plist
 *.lproj
 *.opensdf
 *.sdf
