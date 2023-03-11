@@ -13,6 +13,7 @@ simulation_files = files(
 subdir('elements')
 subdir('simtools')
 subdir('gravity')
+subdir('heat_conduct')
 
 powder_files += simulation_files
 render_files += simulation_files

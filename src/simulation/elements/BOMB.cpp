@@ -60,7 +60,7 @@ static int update(UPDATE_FUNC_ARGS)
 				if (!r)
 					continue;
 				rt = TYP(r);
-				if (rt!=PT_BOMB && rt!=PT_EMBR && rt!=PT_DMND && rt!=PT_CLNE && rt!=PT_PCLN && rt!=PT_BCLN && rt!=PT_VIBR)
+				if (rt != PT_OBMA && rt!=PT_BOMB && rt!=PT_EMBR && rt!=PT_DMND && rt!=PT_CLNE && rt!=PT_PCLN && rt!=PT_BCLN && rt!=PT_VIBR)
 				{
 					int rad = 8, nt;
 					int nxi, nxj;
@@ -75,7 +75,7 @@ static int update(UPDATE_FUNC_ARGS)
 									continue;
 
 								nt = TYP(pmap[ynxj][xnxi]);
-								if (nt!=PT_DMND && nt!=PT_CLNE && nt!=PT_PCLN && nt!=PT_BCLN && nt!=PT_VIBR)
+								if (nt != PT_OBMA && nt!=PT_DMND && nt!=PT_CLNE && nt!=PT_PCLN && nt!=PT_BCLN && nt!=PT_VIBR)
 								{
 									if (nt)
 										sim->kill_part(ID(pmap[ynxj][xnxi]));

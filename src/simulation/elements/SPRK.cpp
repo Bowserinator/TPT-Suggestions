@@ -164,6 +164,23 @@ static int update(UPDATE_FUNC_ARGS)
 					}
 				}
 		break;
+	case PT_GRPH:
+	case PT_GRPP: // Graphite electrolysis
+		for (rx=-1; rx<2; rx++)
+			for (ry=-1; ry<2; ry++)
+				if (BOUNDS_CHECK && (rx || ry)){
+					r = pmap[y+ry][x+rx];
+					if (!r)
+						continue;
+					if (TYP(r)==PT_DSTW || TYP(r)==PT_SLTW || TYP(r)==PT_WATR) {
+						int rndstore = RNG::Ref().gen() % 100;
+						if (!rndstore)
+							sim->part_change_type(ID(r), x+rx, y+ry, PT_CO2);
+						else if (3 > rndstore)
+							sim->part_change_type(ID(r), x+rx, y+ry, PT_H2);
+					}
+				}
+		break;
 	case PT_TUNG:
 		if(parts[i].temp < 3595.0){
 			parts[i].temp += RNG::Ref().between(-4, 15);
@@ -199,6 +216,14 @@ static int update(UPDATE_FUNC_ARGS)
 						}
 					}
 					break;
+				case PT_GRPP:
+				case PT_GRPH: { // Only conducts 1 pixel at a time
+					if (pavg != PT_INSL && parts[i].life < 4) {
+						if (abs(rx) > 1 || abs(ry) > 1)
+							continue;
+					}
+					break;
+				}
 				case PT_SPRK:
 					if (pavg!=PT_INSL && parts[i].life<4)
 					{

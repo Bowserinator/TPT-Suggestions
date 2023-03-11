@@ -420,6 +420,11 @@ int Element_STKM_run_stickman(playerst *playerp, UPDATE_FUNC_ARGS)
 					sim->kill_part(ID(r));
 				}
 
+				if (TYP(r) == PT_OBMA && parts[i].life < 100) { // Obamium gives 100 HP
+					parts[i].life = 100;
+					sim->kill_part(ID(r));
+				}
+
 				if (TYP(r) == PT_NEUT)
 				{
 					if (parts[i].life<=100) parts[i].life -= (102-parts[i].life)/2;

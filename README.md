@@ -1,3 +1,42 @@
+Random Suggestions Mod
+==========================
+
+This mod is a prototype of random ideas from the `#suggestions` channel on the TPT Discord
+
+**Additions:**
+
+**OBMA** - *Obamium. Indestructible heat insulator. Edible.*
+
+An indestructible heat insulator. Does not conduct SPRK. When eaten by STKM regenerates him to full health (ObamaCare).
+
+**GRTM** - *Gravitonium. A liquid GPMP, gravity varies with temperature.*
+
+Although the gravity produced is much weaker than GPMP's, and it can only maintain a temperature between +-256 C. It has low heat 
+conductivity, when repelling it becomes bluish, when attracting becomes more green.
+
+**GRPH** - *Graphite. Slow conductor, slows down neutrons*
+
+- At around 4000 C instantly bursts into flame
+- Begins turning into CO2 at 3600 C and emitting small plasma sparks
+- Only conducts SPRK 1px at a time
+- High heat conductivity
+- Electrolyzes water into CO2 and H2
+- Brittle, like TUNG depends on pressure difference. Additional resistance can be gained by heating up the GRPH
+- Slows down neutrons inside it
+- Converts molten IRON into molten METL
+- Purifies WATR -> DSTW and SLTW -> DSTW + SALT
+- Thin (1px thin) wires superconduct < 100 K
+
+**GRPP** - *Graphite Powder.*
+
+Same properties as graphite, but its auto-ignition temperature is 300 C lower. Also if it's over 3000 C and 20 pressure it will slowly
+resolidify into solid graphite.
+
+**HEC2** - *Instant heat conductor, because someone complained HEAC was slow.*
+
+What it says on the tin.
+
+
 The Powder Toy - January 2023
 ==========================
 

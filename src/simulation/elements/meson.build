@@ -191,6 +191,11 @@ simulation_elem_ids = [
 	[ 'VSNS',   189 ],
 	[ 'ROCK',   190 ],
 	[ 'LITH',   191 ],
+	[ 'OBMA',   192 ],
+	[ 'GRTM',   193 ],
+	[ 'GRPH',   194 ],
+	[ 'GRPP',   195 ],
+	[ 'HEC2',   196 ],
 ]
 
 simulation_elem_src = []

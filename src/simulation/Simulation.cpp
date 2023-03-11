@@ -10,6 +10,7 @@
 #include "common/tpt-rand.h"
 #include "common/tpt-thread-local.h"
 #include "gui/game/Brush.h"
+#include "heat_conduct/conduct.h"
 #include <iostream>
 #include <set>
 
@@ -619,12 +620,16 @@ int Simulation::FloodINST(int x, int y)
 	int x1, x2;
 	int created_something = 0;
 
-	const auto isSparkableInst = [this](int x, int y) -> bool {
-		return TYP(pmap[y][x])==PT_INST && parts[ID(pmap[y][x])].life==0;
+	const auto isSuperconductor = [this](int type) -> bool {
+		return type == PT_INST || type == PT_GRPH || type == PT_GRPP;
 	};
 
-	const auto isInst = [this](int x, int y) -> bool {
-		return TYP(pmap[y][x])==PT_INST || (TYP(pmap[y][x])==PT_SPRK  && parts[ID(pmap[y][x])].ctype==PT_INST);
+	const auto isSparkableInst = [this, isSuperconductor](int x, int y) -> bool {
+		return isSuperconductor(TYP(pmap[y][x])) && parts[ID(pmap[y][x])].life==0;
+	};
+
+	const auto isInst = [this, isSuperconductor](int x, int y) -> bool {
+		return isSuperconductor(TYP(pmap[y][x])) || (TYP(pmap[y][x])==PT_SPRK  && isSuperconductor(parts[ID(pmap[y][x])].ctype));
 	};
 
 	if (!isSparkableInst(x,y))
@@ -1122,6 +1127,7 @@ void Simulation::clear_sim(void)
 		air->ClearAirH();
 	}
 	SetEdgeMode(edgeMode);
+	HEATCONDUCT::heatConductors.clear();
 }
 
 bool Simulation::IsWallBlocking(int x, int y, int type)
@@ -1245,7 +1251,7 @@ void Simulation::init_can_move()
 		 || destinationType == PT_ISOZ || destinationType == PT_ISZS || destinationType == PT_QRTZ || destinationType == PT_PQRT
 		 || destinationType == PT_H2   || destinationType == PT_BGLA || destinationType == PT_C5)
 			can_move[PT_PHOT][destinationType] = 2;
-		if (destinationType != PT_DMND && destinationType != PT_INSL && destinationType != PT_VOID && destinationType != PT_PVOD && destinationType != PT_VIBR && destinationType != PT_BVBR && destinationType != PT_PRTI && destinationType != PT_PRTO)
+		if (destinationType != PT_OBMA && destinationType != PT_DMND && destinationType != PT_INSL && destinationType != PT_VOID && destinationType != PT_PVOD && destinationType != PT_VIBR && destinationType != PT_BVBR && destinationType != PT_PRTI && destinationType != PT_PRTO)
 		{
 			can_move[PT_PROT][destinationType] = 2;
 			can_move[PT_GRVT][destinationType] = 2;
@@ -1254,6 +1260,7 @@ void Simulation::init_can_move()
 
 	//other special cases that weren't covered above
 	can_move[PT_DEST][PT_DMND] = 0;
+	can_move[PT_DEST][PT_OBMA] = 0;
 	can_move[PT_DEST][PT_CLNE] = 0;
 	can_move[PT_DEST][PT_PCLN] = 0;
 	can_move[PT_DEST][PT_BCLN] = 0;
@@ -1269,6 +1276,8 @@ void Simulation::init_can_move()
 
 	can_move[PT_PHOT][PT_BIZR] = 2;
 	can_move[PT_ELEC][PT_BIZR] = 2;
+	can_move[PT_NEUT][PT_GRPH] = 2;
+	can_move[PT_NEUT][PT_GRPP] = 2;
 	can_move[PT_PHOT][PT_BIZRG] = 2;
 	can_move[PT_ELEC][PT_BIZRG] = 2;
 	can_move[PT_PHOT][PT_BIZRS] = 2;
@@ -1955,6 +1964,13 @@ void Simulation::kill_part(int i)//kills particle number i
 	if (t == PT_NONE)
 		return;
 
+	// Reset any heat conduction particles that are deleted
+	if (t == PT_HEC2) {
+		auto itr = HEATCONDUCT::heatConductors.find(parts[i].tmp);
+		if (itr != HEATCONDUCT::heatConductors.end())
+			itr = HEATCONDUCT::heatConductors.erase(itr);
+	}
+
 	elementCount[t]--;
 
 	parts[i].type = PT_NONE;
@@ -2301,6 +2317,8 @@ void Simulation::UpdateParticles(int start, int end)
 	int surround[8];
 	int surround_hconduct[8];
 	bool transitionOccurred;
+
+	HEATCONDUCT::reset_averages();
 
 	//the main particle loop function, goes over all particles.
 	for (i = start; i < end && i <= parts_lastActiveIndex; i++)
@@ -3451,6 +3469,8 @@ killed:
 movedone:
 			continue;
 		}
+
+	HEATCONDUCT::apply_averages(this);
 
 	//'f' was pressed (single frame)
 	if (framerender)
